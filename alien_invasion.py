@@ -21,7 +21,8 @@ def run_game():
         # Watch for keboard and mouse events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()     #sys.exit()
+                pygame.quit()
+                sys.exit()
                 
 
         # Redraw the screen during each pass thorugh the loop.
