@@ -13,7 +13,7 @@ def run_game():
     pygame.display.set_caption("Alien Invasion")
 
     #Make a ship
-    ship = Ship(screen)
+    ship = Ship(ai_settings, screen)
 
     # Set the background color
     bg_color = (230, 230, 230)
@@ -22,7 +22,8 @@ def run_game():
     while True:
 
         # Watch for keboard and mouse events
-        gf.check_events(ship)                
+        gf.check_events(ship)
+        ship.update()
 
         #update the images on the screen
         gf.update_screen(ai_settings, screen, ship)
