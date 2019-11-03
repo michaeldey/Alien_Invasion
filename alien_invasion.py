@@ -2,7 +2,6 @@ import pygame
 from pygame.sprite import Group
 from settings import Settings
 from ship import Ship
-from alien import Alien
 import game_functions as gf
 
 def run_game():
@@ -20,8 +19,9 @@ def run_game():
     # Make group for bullets
     bullets = Group()
  
-    # Make an alien
-    alien = Alien(ai_settings, screen)
+    # Make an alien group and fleet
+    aliens = Group()   
+    gf.create_fleet(ai_settings, screen, aliens)
 
     # Set the background color
     bg_color = (230, 230, 230)
@@ -36,7 +36,7 @@ def run_game():
 
         #update the images on the screen
         gf.update_bullets(bullets)
-        gf.update_screen(ai_settings, screen, ship, alien, bullets)
+        gf.update_screen(ai_settings, screen, ship, aliens, bullets)
 
 
 run_game()
