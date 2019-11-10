@@ -36,11 +36,15 @@ def run_game():
 
         # Watch for keboard and mouse events
         gf.check_events(ai_settings, screen, ship, bullets)
-        ship.update()
 
-        #update the images on the screen
-        gf.update_bullets(ai_settings, screen, ship, aliens, bullets)
-        gf.update_aliens(ai_settings, stats, screen, ship, aliens, bullets)
+
+        if stats.game_active:
+            #update the entities on screen
+            ship.update()
+            gf.update_bullets(ai_settings, screen, ship, aliens, bullets)
+            gf.update_aliens(ai_settings, stats, screen, ship, aliens, bullets)
+
+        # Redraw the screen
         gf.update_screen(ai_settings, screen, ship, aliens, bullets)
 
 
