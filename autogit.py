@@ -1,19 +1,13 @@
 import os
 
-command = 'git checkout aliens'
-os.system(command)
+commands = []
+commands.append('git checkout aliens')
+commands.append('git pull')
+commands.append('touch deleteme3.txt')
+commands.append('git add deleteme3.txt')
+commands.append("git commit -m 'add deletme3.txt to test autogit.py'")
+commands.append('git push')
 
-command = 'git pull'
-os.system(command)
-
-command = 'touch deleteme3.txt'
-os.system(command)
-
-command = 'git add deleteme3.txt'
-os.system(command)
-
-command = "git commit -m 'add deletme3.txt to test autogit.py'"
-os.system(command)
-
-command = 'git push'
-os.system(command)
+for command in commands:
+    print(command)
+    os.system(command)
