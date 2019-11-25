@@ -82,8 +82,8 @@ def check_play_button(ai_settings, screen, stats, play_button, ship, aliens,
         # Make mouse cursor invisible
         pygame.mouse.set_visible(False)
 
-def update_screen(ai_settings, screen, stats, ship, aliens, bullets,
-                  play_button):
+def update_screen(ai_settings, screen, stats, sb, ship,
+            aliens, bullets, play_button):
     """ Update images on screen and flip to the new screen """
 
     # Redraw the screen during each pass thorugh the loop.
@@ -99,6 +99,9 @@ def update_screen(ai_settings, screen, stats, ship, aliens, bullets,
     # Redraw aliens
     aliens.draw(screen)
 
+    # Draw the score information
+    sb.show_score()
+
     # Draw the play button if the game is inactive
     if not stats.game_active:
         play_button.draw_button()
@@ -106,7 +109,7 @@ def update_screen(ai_settings, screen, stats, ship, aliens, bullets,
     # Make the most recently drawn screen visible.
     pygame.display.flip()    
 
-def update_bullets(ai_settings, screen, ship, aliens, bullets):
+def update_bullets(ai_settings, screen, stats, sb, ship, aliens, bullets):
     """ Update position of bullets and get rid of old bullets """
     # update bullet positions
     bullets.update()
@@ -117,12 +120,18 @@ def update_bullets(ai_settings, screen, ship, aliens, bullets):
             bullets.remove(bullet)
 
     # check if the bullets hit any aliens
-    check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets)
+    check_bullet_alien_collisions(ai_settings, screen, stats, sb,
+        ship, aliens, bullets)
 
-def check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets):
+def check_bullet_alien_collisions(ai_settings, screen, stats, sb,
+        ship, aliens, bullets):
     """ Respond to bullet-alien collisions """
     # Remove any bullets and aliens that have collided
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+
+    if collisions:
+        stats.score += ai_settings.alien_points
+        sb.prep_score()
 
     # Destroy existing bullets, speed up game, and create a new fleet
     if len(aliens) == 0:
