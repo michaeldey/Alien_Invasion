@@ -38,7 +38,8 @@ def fire_bullet(ai_settings, screen, ship, bullets):
         new_bullet = Bullet(ai_settings, screen, ship)
         bullets.add(new_bullet)    
 
-def check_events(ai_settings, screen, stats, play_button, ship, bullets):
+def check_events(ai_settings, screen, stats, play_button, ship,
+                 aliens, bullets):
     """ Respond to keypresses and mouse events """
     
     # Watch for keboard and mouse events
@@ -54,14 +55,16 @@ def check_events(ai_settings, screen, stats, play_button, ship, bullets):
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            check_play_button(stats, play_button, mouse_x, mouse_y)
+            check_play_button(ai_settings, screen, stats, play_button,
+                              ship, aliens, bullets, mouse_x, mouse_y)
 
 def check_play_button(ai_settings, screen, stats, play_button, ship, aliens,
                       bullets, mouse_x, mouse_y):
     
     """ Start a new game when the player clicks play """
-    if play_button.rect.collidepoint(mouse_x, mouse_y):
-        # Reset the game statistics
+    button_clicked = play_button.rect.collidepoint(mouse_x, mouse_y)
+    if button_clicked and not stats.game_active:
+         # Reset the game statistics
         stats.reset_stats()
         stats.game_active = True
 
@@ -72,6 +75,12 @@ def check_play_button(ai_settings, screen, stats, play_button, ship, aliens,
         # Create a new fleet and center the ship
         create_fleet(ai_settings, screen, ship, aliens)
         ship.center_ship()
+
+        # Reset game settings
+        ai_settings.initialize_dynamic_settings()
+
+        # Make mouse cursor invisible
+        pygame.mouse.set_visible(False)
 
 def update_screen(ai_settings, screen, stats, ship, aliens, bullets,
                   play_button):
@@ -115,9 +124,10 @@ def check_bullet_alien_collisions(ai_settings, screen, ship, aliens, bullets):
     # Remove any bullets and aliens that have collided
     collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
 
-    # Destroy existing bullets and create a new fleet
+    # Destroy existing bullets, speed up game, and create a new fleet
     if len(aliens) == 0:
         bullets.empty()
+        ai_settings.increase_speed()
         create_fleet(ai_settings, screen, ship, aliens)
 
 def get_number_aliens_x(ai_settings, alien_width):
@@ -216,6 +226,9 @@ def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
 
     else:
         stats.game_active = False
+
+        # Make mouse visible again
+        pygame.mouse.set_visible(True)
        
 def quit_game():
     """ An easy function to end the game """
